@@ -1,0 +1,415 @@
+\documentclass[letterpaper,11pt]{article}
+\pdfoutput=1
+\usepackage{jinstpub}
+\usepackage{lineno}
+\usepackage[colorlinks=true]{hyperref}
+\linenumbers
+
+\title{Design and construction of MuTe: a hybrid Muon Telescope to study Colombian Volcanoes}
+
+\author[a, 1]{J. Pe\~na-Rodr\'{\i}guez, \note{Corresponding author.}}
+\author[a]{J. Pisco-Guabave}
+\author[a,b]{D. Sierra-Porta}
+\author[a]{M. Su\'arez-Dur\'an}
+\author[c]{M. Arenas-Fl\'orez}
+\author[c]{L. M. P\'erez-Archila}
+\author[a]{J. D. Sanabria-G\'omez}
+\author[d,e]{H. Asorey}
+\author[a,f]{L. A. N\'u\~nez.}
+
+\affiliation[a]{Escuela de F\'isica, Universidad Industrial de Santander,  Bucaramanga-Colombia.}
+\affiliation[b]{Centro de Modelado Cient\'ifico, Facultad Experimental de Ciencias, Universidad del Zulia, Maracaibo-Venezuela.}
+\affiliation[c]{Escuela de Ingenier\'ia Eléctrica, Universidad Industrial de Santander,  Bucaramanga-Colombia.}
+\affiliation[d]{Laboratorio Detecci\'on de Part\'{\i}culas y Radiaci\'on, Instituto Balseiro y Centro At\'omico Bariloche, Comisi\'on Nacional de Energ\'{\i}a At\'omica, San Carlos de Bariloche-Argentina.}
+\affiliation[e]{Sede Andina, Universidad Nacional de R\'io Negro, San Carlos de Bariloche-Argentina.}
+\affiliation[f]{Departamento de F\'isica, Universidad de Los Andes, M\'erida-Venezuela.}
+
+
+% e-mail addresses: only for the corresponding author
+\emailAdd{jesusteel@gmail.com}
+
+
+\abstract{We present an hybrid Muon Telescope designed and built for imaging active Colombian volcanoes. The MuTe has a resolution of tens of meters, low power consumption, robustness and transportability which make it suitable for using in difficult access zones where active volcanoes usually are. The main feature of MuTe is the implementation of an hybrid detection technique consisting in combining two scintillation panels for particle tracking and a Water Cherenkov Detector (WCD) for filtering background sources coming from the electromagnetic component of Extended Air Showers (EAS). We also show mechanical behavior of the MuTe during typical tremors and wind conditions at the observation place, as well as the frontend electronics design and power consumption.}
+
+\keywords{Cosmic Rays, Muography, Volcanoes, Particle Identification}
+
+\arxivnumber{xxxx.xxxxx} % only if you have one
+
+% \collaboration{\includegraphics[height=17mm]{example-image}\\[6pt]
+%   XXX collaboration}
+% or
+
+%\collaboration[c]{on behalf of XXX collaboration}
+
+
+% if you write for a special issue this may be useful
+%\proceeding{N$^{\text{th}}$ Workshop on X\\
+%  when\\
+%  where}
+
+
+
+\begin{document}
+\maketitle
+\flushbottom
+\section{Introduction}
+\label{sec:intro}
+
+Muography or Muon Radiography is a non-invasive emerging technology whose main purpose is creating digital images from density contrasts in the inner structure of objects by measuring the atmospheric muon flux passing through them\cite{Kaiser2019}. Muons are fundamental particles two hundred times heavier than electrons with a decay lifetime of approximately 2.2 $\mu$s. These characteristics, combined with high penetrating power, allows that high energy muons can traverse several kilometers inside matter before decaying. This fact can be appropriately used to determine density variations inside large structures, mainly volcanoes.
+
+When Cosmic Rays (CR) reach the Earth's atmosphere from galactic and extragalactic sources, these particles interact with atmospheric nucleus in four ways mainly: inelastic scattering, ionization, pair production and Bremsstrahlung, creating cascades of secondary particles composed mainly by gamma, electrons, positrons, muons, neutrinos, and hadrons. Most of the particles that reach the Earth's surface have a electromagnetic components, but also a great quantity of muons. Muons with energy greater than 0.2 GeV constitute the hard component of the secondary cosmic radiation, which is very penetrating and can be measured even few meters underground. Charged pions and kaons decay and electron disintegration constitute the mainly processes for generate muons in the atmosphere. The energy spectrum of muons at sea level has a maximum around 4 GeV with a flux of $\sim$ 1 cm$^{-2}$ min$^{-1}$ \cite{nakamura2010review}. 
+
+According to the medium that one wants to study (a pyramid, a mountain, commercial container, etc.) more or less muons will cross according to density and thickness of the object. In order to have good resolution in the resulting density image we must to record many events making the measurements quite long before being processed. It should be noted that the muon flux is not uniform for all energies and also depends on the angle of detection.
+
+The first muography was done by L. \'Alvarez et al. \cite{burkhard1970search} in 1969 to search for hidden chambers of the Pyramid of Chephren using spark chambers. The work was arduous, since the detection time was of several days and the resolution and accuracy of the instrument were not as good as it had been desired, so despite of researchers tenacity, the results were not of all satisfactory and the project was aborted. Nowadays, other applications concerned with the study of underground structures, such as natural caves \cite{caffau1997underground} or archaeological constructions \cite{basset2006mgr,menichelli2007scintillating} have been developed. However, muography of volcanoes has particular interest \cite{tanaka2013subsurface,saracino2012looking,marteau2012muons,okubo2012imaging,lesparre2010geophysical,tanaka2007high}.
+
+Despite a great deal of work in these areas, some particular problems have arisen and are still being addressed today:
+\begin{itemize}
+
+\item Muon flux penetrating volcano edifices is generally very weak, indeed, for a specific altitude above sea level at which the detector is located, the flux at angles close to the horizontal plane is roughly two orders of magnitude smaller than the flux for vertical muons and decreases about two orders of magnitude more considering muons that achieve to traverse the structure about 1 km-thick of standard rock \cite{groom2001muon, groom2000passage}. This implies to consider longer exposure times of the instruments in order to have more statistics or to design an instrument with adjustable angular resolution to optimize the number of events detected.
+
+\item One of the major problems encountered so far in muography is related to background particles flux that are detected by the instrument but which do not come from the volcano, that means, they do not pass through the structure. Such background sources are composed by charged particles arriving from behind the detector, EAS particles, and scattered low momentum muons (1 GeV/c). All of them generate signals that can be taken as true events implying an overestimation of penetrating particles flux with the consequence of an significant underestimation of the estimated density for the sight of the detector in the volcano \cite{carbone2013experiment, jourde2013experimental, nishiyama2014experimental, nishiyama2016monte, ambrosino2015joint}. In fact, Carbone et. al. \cite{carbone2013experiment} found an increase in a factor from 2 to 10 in the measured particle flux by a scintillation detector, whereas Nishiyama et. al. \cite{nishiyama2016monte} found an excess from 4 to 8 in their measurements using emulsion films.
+\end{itemize}
+
+The muon telescope (MuTe) \cite{AsoreyEtal2017B, SierraPortaEtal2018} is a detector designed and built by the Universidad Industrial de Santander in Colombia, suitable for the application of muography technique in different geophysical scenarios, with particular interest in the study of internal structures of high-danger volcanoes. MuTe uses a hodoscope composed of plastic scintillator bars that determines the direction of particles passing through the detector and records the muon flux coming from the volcanic structure. Additionally, a second instrument, in this case a Water Cherenkov Detector, allows to estimate the energy loss of charged particles crossing the MuTe helping to filter and reduce the noise due to the soft-component of EAS (electrons and positrons). Discrimination of false-positive events due to scattered and back-coming muons is addressed using a Time-of-Flight system.
+
+In this paper we describe a muon telescope designed for field experiments in volcanoes, addressing the two problems mentioned before. In section \ref{detector}, we present the MuTe detection characteristics. In section \ref{acceptan} the telescope acceptance is estimated and first flux measurements carried out by the MuTe hodoscope are shown. In section \ref{daq} we present the data acquisition system, trigger and power consumption of the MuTe. In section \ref{mechanical} we show simulations of the MuTe mechanical response for expected environmental conditions at volcanic areas. Finally in section \ref{conclusions} we present the conclusions and remarks.
+
+\section{The MuTe detector}
+\label{detector}
+In this section, we present the most significant characteristics of our muon telescope, MuTe: event tracking and signal-to-noise discrimination. Mainly our hybrid instrument consists of two detectors, i.e., a scintillator hodoscope and a Water Cherenkov Detector (WCD). This hybrid measurement technique had been implemented in the Pierre Auger Observatory to study the composition of primary cosmic rays \cite{martello2017pierre, aab2017muon, aab2016prototype}. 
+
+\subsection{Scintillator hodoscope: tracking}
+Two detection panels, with 60 scintillator bars  implement the MuTe hodoscope. Each plastic scintillator strip is a polystyrene base of Styron 665-W doped with 1$\%$ of 2,5-diphenyloxazole (PPO) and 0.03$\%$ of 1,4-bis (5-phenyloxazol-2-yl) benzene (POPOP), co-extruded with a 0.25 mm thick high reflectivity coating of $\text{TiO}_{\text{2}}$ \cite{PlaDalmau2003}. 
+
+A wavelength shifting (WLS) fiber Saint-Gobain BCF-92 (1.2 mm diameter) is placed inside, a co-extruded hole of 1.8 mm diameter. The fiber has a core refraction index of 1.42, an absorption peak at 410 nm, and an emission peak at 492 nm. The fiber captures the pulses produced by the scintillator by the crossing charged particles and taken to a Silicon Photomultiplier (SiPM) Hamamatsu S13360-1350CS. The WLS fiber is centered in the SiPM sensitive area using a mechanical coupling.
+
+The scintillator panels build up an array of 30 horizontal (X) and 30 vertical (Y) bars reaching 900 pixels of 16 cm$^2$ active area each. The two X and Y scintillator layers are inside a 0.9 mm thick stainless steel frame, which gives them mechanical robustness. A second steel housing encapsulates the SiPM electronics,  the temperature/pressure sensors, the coaxial cables, and the readout electronics keep this components insulated and protected from environmental conditions. 
+
+The hodoscope reconstructs the muon direction of arrival by taking into account the pairs of pixels activated in each panel by the crossing particle. Changing the distance between the scintillator matrices vary the total aperture angle and the angular resolution of the telescope. The distance between the detector and the volcanic structure as well as the separation of the matrices define the spatial resolution of this telescope as
+\begin{equation}
+\Delta x=L\times\Delta\theta=L\times \arctan{\frac{2dD}{D^2+4d^2i(i+1)}},
+\end{equation}
+where, $\Delta\theta$ is the angular resolution, $L$, is distance to the target, $D$ is the separation distance between the panels, $d$ is pixel width and $i$ es the $i$th illuminated pixel. Taking into account a distance to the volcano of 900 meters for the previous angular resolutions we will have spatial resolutions of 48, 36 and 28 m respectively.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\columnwidth]{Figures/panel.eps}
+\caption{Mounting and coupling details for one detection panel. (Left) Mechanical assemble of the scintillator bar, the Saint-Gobain BCF-92 WLS fiber and the Hamamatsu S13360-1350CS SiPM. (Right) Scintillator panel with the SiPM electronics front-end and signal transmission cables (coaxial RG-174U).}
+\label{fig:frame}
+\end{figure}
+
+\subsection{Water Cherenkov Detector: energy loss measurement}
+
+Due to its low cost, reasonable efficiency, and $\sim$ 100 $\%$ duty cycle, one of the most common detectors in cosmic ray physics is the Water Cherenkov  Detector (WCD). These detectors are few cubic meters of water with one or more photomultiplier tubes (PMTs) to detect Cherenkov radiation produced by crossing charged particles with a velocity greater than the speed of light in water. They also detect --indirectly-- photons in EAS by pair production ($\gamma \rightarrow$ e$^{\pm}$) \cite{allard2007detecting, allard2008use, allekotte2008surface}. High energy photons make up $\sim$70\% of the total EAS particles. 
+
+The MuTe WCD is a 3.2 mm thick stainless steel cube of 1.2 m sides, covered inside with Tyvek diffusor sheet, which enhances interior reflectivity for the Cherenkov photons. An eight inches PMT --PMT R5912 from Hamamatsu with a quantum Efficiency of 22$\%$ at 390nm-- acts as a photosensitive device. The detected photon yield can be associated with the particle energy loss allowing us to differentiate muons from the EAS electromagnetic component (photons, electrons, and positrons). The EM component represents one of the most important noise source in muography as is reported in several works \cite{KUSAGAYA2015, Nishiyama2014Noise, Marteau2012Noise}. At ground level,  most probable muons ($\approx$ 4 GeV) can traverse the whole WCD lossing up to 240 MeV (2 MeV/cm along 120 cm) for perpendicular trajectories while the most probable electrons ($\approx$ 20 MeV) stops in only 10 cm of water losing 2 MeV/cm \cite{groom2001muon,groom2000passage,lohmann1985energy,olive2014passage,Vasquez2018, Motta2018}.
+
+Besides, the WCD also measures the local secondary flux independently at the detector level. This design combines innovatively both techniques described above, allowing to discriminate accurately the muons flux coming from the direction of the volcano (with the hodoscope), and measuring at the same time the intrinsic local variations of the secondary particle flux (with the WCD). 
+
+\subsection{Time-of-Flight: momentum measurement}
+
+Time-of-Flight systems has been used in muography to distinguish detected backward-coming particles from those front-coming \cite{jourde2013experimental} which represents roughly 44 $\%$ of background particles in the $\cos \theta$ range of 0-0.15, where $\theta$ is the zenith angle \cite{nishiyama2016monte}.
+
+MuTe performs ToF measurements for identify back-coming particles and low momentum ($<$ 1 GeV/c) muons that have been scattered on the volcano surface mimicking tracks of penetrating muons contributing also to the background noise. The MuTe ToF system was implemented on an FPGA Spartan 6 by means of a Time-to-Digital Converter (TDC), which measures time-lapse of crossing particles between the frontal and the rear panel with a time resolution of $\sim$ 40 ps. 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.5\columnwidth]{Figures/ToF_Resolution_250cm.png}
+\caption{ToF resolution depending on the momentum estimation error, $\pm$10 MeV/c (black line) or $\pm$100 MeV/c (red line), for an inter-panel distance of 250 cm. The blue line represents the up-to-date MuTe ToF resolution (40 ps).}
+\label{fig:ToF_Resolution}
+\end{figure}
+
+
+Taking into account the ToF $t$ of particles crossing the hodoscope in a given track $d$, and the particle identification provided by the WCD (distinguishing muons from electron/positrons) we can estimate particle momentum as follows
+
+\begin{equation}
+p = \frac{m_0 c d}{\sqrt{c^2t^2-d^2}}
+\end{equation}
+
+where $m_0$ is the mass at rest of the charged particle (105.65 Mev/c$^2$ for muons and 0.51 Mev/c$^2$ for electrons/positrons) and $c$ the speed of light. The momentum estimation uncertainty depends on the error of the ToF measurement and the error of the track length and it is defined as
+
+\begin{equation}
+\sigma_p^2 = \left( \frac{\partial p}{\partial t} \right)^2 + \left( \frac{\partial p}{\partial d} \right)^2
+\end{equation}
+
+
+Measurement of momentum allow us to set a momentum threshold around 1 GeV/c above which the influence of noise due to soft muons is negligible \cite{nishiyama2016monte, nishiyama2014experimental, Olh2018, Olh2017, ambrosino2015joint}. In order to establish such a cutoff, we calculate the ToF resolution requirements depends on the momentum resolution we want to reach. In Fig. \ref{fig:ToF_Resolution} we show the ToF resolution $\delta_t$ depending on the particle momentum for an estimation error of $\pm$ 10 MeV/c and $\pm$ 100 MeV/c with an inter-panel distance of 2.5 m. For perpendicular tracks to the hodoscope plane we need a ToF resolution of 10 ps to differentiate muons with momentum $>$ 1 GeV/c with an error of $\pm$ 0.1 GeV/c. With the actual $\sim 40$ ps resolution we can recognize muons under 0.6$\pm$ 0.1 GeV/c.
+
+
+
+\section{Telescope acceptance}
+\label{acceptan}
+The acceptance of the instrument has an impact on the measured particle flux and depends on telescope geometrical  parameters: number of pixels in the panels ($N_x, N_y$), size of pixels ($d$), and separation of panels ($D$). Thus, the number of muons $N(\varrho)$ \cite{LesparreEtal2010}, can be defined as
+\begin{equation}
+N(\varrho)=\Delta T \times \mathcal{T}\times I(\varrho), \label{Nmuons}
+\end{equation}
+where $I(\varrho)$ is the integrated flux (measured in cm$^{-2}$ sr$^{-1}$ s$^{-1}$), $\mathcal{T}$ the acceptance function (measured in cm$^{2}$ sr), the recording time (in seconds) indicated by $\Delta T$, and $\varrho(L)$ represents the opacity parameter, related to the material muon absorption.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.48\columnwidth]{Figures/Solid_angle.png}
+\includegraphics[width=0.48\columnwidth]{Figures/Aceptancia.png}
+\caption{Angular resolution (left), and acceptance function (right) for the MuTe hodoscope with $N_x=N_y=30$, $d=4$ cm and $D=250$ cm in terms of each discrete direction. The maximum solid angle is 1.024 sr for perpendicular trajectories where the acceptance rises up to 3.69 cm$^{2}$ sr.}
+\label{fig:acceptance}
+\end{figure}
+
+
+For a particular trajectory $r_{m,n}$ displayed by a pair of illuminated pixels on both panels, one can calculate the solid angle $\delta\Omega(r_{m,n})$ and the detection area $S(r_{m,n})$. All pairs of pixels with the same relative position, {$m=i-k$, $n=j-l$}, share the same direction, $r_{m,n}$ and the same $\delta\Omega(r_{m,n})$. This means directions near to the normal arrival, have the larger detection area, while directions crossing corner-to-corner have the smaller solid angle and detection area. The acceptance is obtained \cite{LesparreEtal2010} multiplying the detection area by the angular resolution,
+\begin{equation}
+\mathcal{T}(r_{m,n})=S(r_{m,n})\times \delta\Omega(r_{m,n}).
+\end{equation}
+
+A telescope with two matrices of $N_x\times N_y$ pixels has $(2N_x-1)\times(2N_y-1)$ discrete directions $r_{m,n}$, spanning an solid angle $\Omega$. Our telescope equipped with 900 pixels is able to reconstruct 3481 discrete directions. In Fig. \ref{fig:acceptance}, we show the angular resolution and acceptance function for the Mute hodoscope with $N_x=N_y=30$ scintillator bars, size of pixel $d=4$ cm and $D=250$ cm. The total angular aperture of the telescope with that configuration is roughly 50$^{\circ}$ with a maximum angular resolution of $1.024\times 10^{-3}$ sr at $r_{0,0}$. On the other hand, the largest detection surface corresponds to the normal direction, $r_{0,0}$ and reaches $\approx 3.69$ cm$^{2}$ sr in this telescope (See Fig. \ref{fig:acceptance}).
+
+The MuTe acceptance can be compared with other telescopes for example described by \cite{UchidaTanakaTanaka2009space} with $N_x=N_y=12$, $d=7$ cm, and $D=100$ cm with a acceptance of $\mathcal{T}=30$ cm$^{2}$ sr and an angular resolution less than 0.018 sr, or with telescope presented in \cite{LesparreEtal2010} with $N_x=N_y=16$, $d=5$ cm, and $D=80$ cm with a acceptance of $\mathcal{T}=25$ cm$^{2}$ sr and an angular resolution less than 0.015 sr.  
+
+\section{Electronics readout}
+\label{daq}
+The MuTe electronic readout system has two main --independent but synchronized-- components: one for the hodoscope and other for the WCD. 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\columnwidth]{Figures/DAQ.eps}
+\caption{The diagram of a single scintillator panel. Signals from the SiPMs are read out by the MAROC3 board whose slow control parameters are handled by a Raspberry Pi 2. All the detected events are time-stamped and sent via ethernet to the central monitoring server. The master trigger measures the ToF of the crossing particle and notifies the event truthfulness.}
+  \label{fig:scintillatordetector1}
+\end{figure}
+
+In the hodoscope, 60 SiPMs --S13360-1350CS, with a gain of $\sim 10^6$ and a photo-detection efficiency of 40$\%$ at 450 nm-- detect the light signals coming from the scintillator bars. Each SiPM-fiber-bar set has a pre-conditioning attached electronics to amplify ($\times$ 92) and to enhance the signal-to-noise ratio before the transmission. 
+
+A multi-channel ASIC MAROC3 from Omega discriminates the 60 signals after a gain tuning and shaping stage. The MAROC3 slow control parameters (channel gains, shaper parameters, discrimination thresholds and charge measurements) are set by a FPGA Cyclone III from Altera.
+
+The SCB Raspberry Pi 2 records the data from the scintillation panels as well as environmental data (temperature, barometric pressure, and power consumption) for post-processing and calibration procedures. On the other hand, the SBC controls the SiPMs bias voltage depending on the temperature and the SiPM break voltage calibration curve. The recorded events are time-stamped with a resolution of 10 ns and are synchronized using a GPS Venus from SparkFun. A general diagram of the electronics readout for a single scintillator panel is in Fig. \ref{fig:scintillatordetector1}.
+
+In the WCD, Cherenkov photons are converted to electrical signals by the PMT R5912. Then, the anode and the last dynode records these pulses and amplify them 20 times to avoid information loss for small energy events.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.9\columnwidth]{Figures/WCDDAQ.eps}
+\caption{The diagram of the WCD DAQ system. The PMT and the bias electronics are inside the WCD. A 10 bits ADC digitizes signals from the PMT anode and last-dynode and stored in a hard disk join with temperature and barometric pressure data. An FPGA sets the acquisition parameters and the event time-stamp}
+  \label{fig:WCD}
+\end{figure}
+
+Next, the signals are digitized by a 10 bits ADC with a sampling frequency of 40 MHz. When the signal amplitude exceeds the discrimination threshold ($\sim$ 100 ADCU), the pulse shape is stored in a 12 samples vector. Simultaneously, a temporal label with 25 ns resolution is concatenated with the event information. The timestamp is synchronized with the Pulse-Per-Second signal from a GPS Motorola OnCore. Temperature and barometric pressure data are also recorded for the off-line analysis and data correction. The tasks of threshold, base-line correction, temporal labeling, and temperature-pressure recording are handled by an FPGA Spartan 3.
+
+An SCB Cubieboard 2 sets the acquisition parameters of the three channels DAQ system; such parameters are discrimination thresholds per channel and PMT bias voltage values. All the data is stored in a one-hour file format in an external hard disk. A sketch of the WCD DAQ system is in Fig. \ref{fig:WCD}.
+
+\subsection{Trigger system}
+Several trigger conditions, ordered in a hierarchical way, determine the event coincidence between scintillator panels and the WCD. When a particle hits one of the panels, and the signal amplitude exceeds the discrimination threshold, the trigger T1 (OR Trigger) is enabled for that panel. Only events activating a vertical and a horizontal bar have been taking into account to resolve the pixel position, such condition is called trigger T2 ans it is permormed offline in the data analysis.
+
+Events detected by the frontal (Trigger P1-P2) and the rear panel (Trigger P2-P1) in a time window range of 7 ns to 12 ns are validated as true crossing particles forming the trigger T3. This coincidence window accounts for the time taken by a particle crossing the hodoscope following two critical paths: the shortest (2.5 m) and the longest (3.5 m).
+
+Trigger T4 occurs when a particle is detected only by the WCD, and finally, trigger T5 is due to events detected in coincidence by the hodoscope and the WCD, this trigger is also called hybrid trigger (T5 = T3 \textbf{AND} T4).
+
+\subsection{Power consumption and operating autonomy}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.6\columnwidth]{Figures/Total.eps}
+\caption{General diagram of MuTe. The central server manages the data coming from the hodoscope and the WCD by means a router.  A central hard disk stores all the obtained data. For remote monitoring, MuTe sends its operational status via GSM. A WiFi connection link enables the possibility for local testing. The whole detector consumes 41.4 W where the maximum power is dissipated by the central server due to the hard disk, the intranet router, and the GSM transceiver.}
+\label{fig:power}
+\end{figure}
+
+Electric consumption is a crucial parameter for our MuTe detector because it needs to operate autonomously on a distant location, and the energy system must provide enough power to avoid the detector shutdown. Thus, we have designed a photovoltaic system to give autonomy taking into account the power consumption of all the detector components. 
+
+Figure \ref{fig:power} displays the power consumption schema of MuTe: $\sim 24$ W for the hodoscope,  $\sim 5.2$ W for the WCD  and $\sim 12.2$ W for the central monitoring server. The two hard disks  --used to store 470 MB per hour of data from the hodoscope and WCD-- are the devices with greater power consumption, but they provide almost six months of data-storage autonomy.
+
+To estimate the power capacity and autonomy of the photovoltaic, we use meteorological information, i.e., irradiance, temperature, and cloudiness data from NASA satellites\footnote{National Aeronautics and Space Administration. Surface Meteorology and Solar Energy. \url{https://eosweb.larc.nasa.gov/cgi-bin/sse/sse.cgi?skip@larc.nasa.gov}} and from the Meteorology and Hydrology National Office\footnote{Instituto de Hidrología, Meteorología y Estudios Ambientales de Colombia. (IDEAM). Atlas Interactivo. \url{http://atlas.ideam.gov.co}} at typical volcano neighborhoods in Colombia. The average irradiance per month for 22 years is approximately 4-5 kWh m$^{-2}$ day$^{-1}$ with an average temperature of $\sim$ 20 $^{\circ}$C and a maximum of 6 consecutive cloudy days.
+
+Several configurations of Victron Energy\footnote{BlueSolar polycrystalline panels (Datasheet). Taken from \url{https://www.victronenergy.com.es/upload/documents/Datasheet-BlueSolar-Polycrystalline-Panels-ES.pdf}.} photovoltaic panels were assessed. We found an optimum quantity of 4 panels of 100 W with a nominal voltage of 18 V, a nominal current of 5.56 A and a weight of 4.3 kg per panel.
+
+The storage capacity required by the system in a day ($C_A$) is calculated using the modified Roger equation (\ref{cap_alma}) \cite{messenger2017photovoltaic}, i.e. 
+\begin{equation}
+C_a=\frac{E_c(1+F_s)}{\eta_{pb}\eta_{cdb}\eta_{rc}\eta_{pc}D_{b}} \label{cap_alma}
+\end{equation}
+where $E_c$ is the load energy considering DC/DC converters, $F_s$ the scaling factor, $\eta_{pb}$ the efficiency of conductors, $\eta_{cdb}$ the efficiency of batteries, $\eta_{rc}$ the battery charge and discharge efficiency, $\eta_{pc}$ the charge controller efficiency, and $D_{b}$ corresponds to the battery depth of discharge. $E_c$ defined as follows
+\begin{equation}
+E_c=E_x+\frac{E_{\gamma}}{\eta_{dcdc}}
+\label{two}
+\end{equation}
+where $E_{x}$ is the load energy which does not require DC/DC converters, $E_{\gamma}$ the load energy requiring DC/DC converters and, $\eta_{dcdc}$ the efficiency of the DC/DC converters. From (\ref{two}) with $E_{x}=58.57$ Wh and $E_{\gamma}=746.24$ Wh, we have $E_c=844.08$ Wh. Therefore, by using $\eta_{pb}=0.97$, $\eta_{cdb}=0.95$, $\eta_{rc}=0.95$, $\eta_{pc}=0.98$, $D_{b}=0.8$ and $F_s=0.2$ (20\% oversizing), we can have a value of $C_a=1472.75$ Wh, while the total storage capacity with which the system will count can be obtained by means of
+\begin{equation}
+C_{at}=\frac{C_aD_a}{V_{nb}}
+\end{equation}
+where $D_a$ is the total number of autonomy days and $V_{nb}$ is the nominal voltage of the battery bank. In this case we set 6 days of autonomy with a nominal voltage of 12 V resulting in a total storage capacity of $C_{at}=736.38$ Ah. According to the criteria and environmental conditions presented above, we found the need of four batteries of 205 Ah with a weigh of 65 kg per battery and a discharge depth of 80\%.
+
+\section{Mechanical response}
+\label{mechanical}
+\subsection{Structural design}
+The hodoscope, the WCD, their electronics readout, and the central monitoring server are mounted on a sturdy metallic structure, as is shown in Fig. \ref{fig:Structure}. The frame consists of a 4.2 m $\times$ 2.8 m $\times$ 1.8 m parallelepiped-shaped structure constructed of steel ASTM A-36 angles of 3.2 mm thick and mechanically attached by screws of 1/2 inch diameter. The MuTe inclination is set using a mobile base which can reach up to 15 degrees from the ground.
+
+Figure \ref{fig:Structure} illustrates the structure of the instrument. Notice that the rear panel is fixed to one of the walls of the WCD, while the frontal panel can slide on a rail of 2.8 m length, providing a significant variable angular resolution for the telescope. 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\columnwidth]{Figures/Detector.eps}
+\caption{Lateral view of the MuTe detector. The WCD, placed on the center of mass of the structure, benefits the elevation movement which reaches up to 15 $^{\circ}$ by steps of 3 $^{\circ}$. The inter-panel distance can variate from  $40$ m up to $250$ m. The electronics front-end boxes are isolated from rain and humidity, as well as the PMT housing.}
+  \label{fig:Structure}
+\end{figure}
+
+Since the MuTe will be working in field conditions inherent to volcanic environments, then it is necessary to study the mechanical behavior of the detector under such conditions. For this reason, in the following section, we show the stress load and vibration analysis of the instrument taking into account the structural design as well as mechanical stress due to tremors and wind conditions. Such simulations were performed using the \textsc{Solidworks 3D CAD Modeling Software} with the package \textsc{Solidworks Simulation} of structural analysis tools that use Finite Element Analysis (FEA) to predict real physical behavior with linear, non-linear static and dynamic analysis capabilities.
+
+\subsection{Vibrations analysis and tremors}
+We calculate the natural frequencies and vibration patterns of the instrument from the dynamic response of the structure under external vibration wind sources. 
+
+The area where the detector will be placed is compromised for the effects of the inherent dynamics of an active volcano. This means that eventually there could be tremors and movements of the internal structures of the volcano which would cause earthquakes that would compromise the integrity of the instrument. Volcanic earthquakes are classified as: (a) volcano-tectonic earthquakes associated with fracturing that occur in response to stress changes in the active areas by fluid movement. Its frequency is generally with spectral peaks around 2-15 Hz. b) long period earthquakes with spectral peaks around 1-2 Hz attributed to resonance in cracks, cavities and ducts, due to pressure changes in fluids that exist in volcanoes \cite{mcnutt1992volcanic}, \cite{londono2001spectral}, \cite{langer2006automatic}, \cite{chouet2003volcano}.
+
+\begin{table}[htb]
+\begin{center}
+\begin{tabular}{ccccc}
+\hline
+& {\bf Ang. frec.} & {\bf Frequency} & {\bf Min.}  & {\bf Max.}\\
+{\bf Mode} & {\bf (Rad/s)} & {\bf (Hertz)} & {\bf (Hertz)} & {\bf (Hertz)} \\
+\hline
+1 & 10.053 & 1.6 & 0 & 0.01272\\ 
+2 & 31.51 & 5.0149  & 0 & 0.0113 \\
+3 & 35.465 & 5.6445  & 0 & 0.0303 \\
+4 & 47.522 & 7.5633  & 0 & 0.0361 \\
+5 & 47.565 & 7.5702 & 0 & 0.0166 \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Natural frequency of vibration of the instrument.}
+\label{Table_nat_frec1}
+\end{table}
+
+We exposed the instrument to five vibration modes, and the results obtained from the simulation are displayed in table \ref{Table_nat_frec1}. The structure reacts vibrating between a minimum and maximum frequencies, not exceeding $0.04$ Hz, keeping the instrument safe against potential seismic events triggered by the volcano activity, which may range from 1.6 to 7.5 Hz. The MuTe structure has a negligible mechanical affectation due to displacements caused by tremors or other movement manifestations inherent to volcanic environments.
+
+\subsection{Static and wind load}
+The analysis of static load aims to perform a simulation exploring the behavior of the instrument structure against flexion, displacement, and deformation that can cause structural failures. 
+
+The MuTe structure is composed mostly of steel ASTM A-36. The main possible effort for the structure emerges from two sources: the water volume inside the WCD ($\sim$ 1728 Kg) and the metal frames for the scintillator panels ($\sim$ 70 Kg each). The simulation mesh was 2.6 $\times$ 10$^6$ finite elements with 15 $\pm$ 5 mm size. Figure \ref{fig:stress} (left) displays the simulation results. The displacements range from  0 mm up to 3.29 mm with the maximum peak stress under the WCD; however, such deformations do not represent any considerable mechanical problem for the instrument.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.48\columnwidth]{Figures/stress_graph.eps}
+\includegraphics[width=0.48\columnwidth]{Figures/stress_graph_wind.eps}
+\caption{(Left) Stress graph resulting of the static load analysis. The maximum material deflection is about 3.29 mm is the rear part of the WCD which is under a big pressure due to the water volume weight. (Right) Stress graph resulting of the dynamic load analysis by wind action. The maximum pressure of wind occurs in the front of the scintillator panels suffering a mechanical displacement about $1.63$ mm.}
+\label{fig:stress}
+\end{figure}
+
+Additionally, to determine dynamical loads on the instrument due to wind currents, an analysis was performed using as input typical wind conditions at the observation area. Data from the Colombian Hydrology, Meteorology and Environmental Studies Institute (IDEAM by its acronym in spanish of \textit{Instituto de Hidrología, Meteorología y Estudios Ambientales}) were used to estimate the pressure by the wind in the MuTe structure. The maximum wind speed reported is 30 m/s, with an occurrence probability of 4\%.
+
+% \begin{figure}[htb]
+% \centering
+% \includegraphics[width=0.6\columnwidth]{Figures/stress_graph_wind.eps}
+% \caption{Stress graph resulting of the dynamic load analysis by wind action. The maximum pressure of wind occurs in the front of the scintillator panels suffering a mechanical displacement about $1.63$ mm.}
+% \label{fig:stress_wind}
+% \end{figure}
+
+Figure \ref{fig:stress} (right) illustrates the structure stress due to wind load. The structure suffers mechanical displacements up to 1.63 mm in the frontal part of the scintillator panels due to the wind pressure on the surface. However, this displacement is not representative, and the instrument will not suffer significant deformations.
+
+In summary, the simulations of load distribution by weight and wind have shown that the mechanical design of MuTe is robust. The maximum stress values for static and dynamical loads do not represent a risk for the detector structure and electronics system maintaining it safe while functioning.
+
+\subsection{Heat dissipation in the structure}
+
+The instrument is subjected to external heating sources such as the radiation from the sun and internal sources as the electronics which could induce heat in the structure reaching temperatures that could cause malfunctioning. In this case, we compute the temperature distribution in the solid structure, based on the thermal inputs (heat loads) and thermal outputs (heat losses) taking into account conduction, convection and thermal irradiation processes present in the detector environment. Such processes involve environmental temperature, solar radiation, cooling by wind, and heating by the electronics power consumption.
+
+The thermal analysis allow us to know the heat transfer along the structure and how it can affect the detector components. Instrument safety and functioning on field is an important factor to take into account, since many materials in the detector have properties that depend on temperature such the SiPMs and scintillator bars.
+
+For the thermal analysis of the structure we use a finite element method. The parameters in Table \ref{instr_mat} are taken into account for computing the temperature distribution on the MuTe structure. 
+
+From Fig. \ref{fig:temp_graph}, we can see that the maximum temperature in which the detector is subjected is around 60 $^{\circ}$C located in the center of the scintillation panels where a large surface is heated by the solar radiation, while there is an average of 23 $^{\circ}$C in the rest of the structure. The WCD, although has a large metallic surface, represents a good source of heat dissipation because of its water content (1.7 m$^3$) finding a maximum temperature of 40 $^{\circ}$C. On the other hand, the frontal side of both panels has a lower temperature than the rear side since the wind flow generates a cooling process by convection.
+
+\begin{table}[!ht]
+\begin{center}
+\begin{tabular}{ll|ll}
+\hline
+\multicolumn{2}{c}{\bf DETECTOR MATERIALS} & \multicolumn{2}{|c}{\bf HEAD SOURCES DATA}\\
+\hline
+Structure Material: & AISI 1020 & Sky temperature & -10 $^{\circ}$C \\
+Model type: & Linear elastic isotropic & Electronic box WCD & 5.2 W \\
+Thermal conductivity: & 47 W/(m K) & Gen. electronic box & 12.5 W \\
+Specific heat: & 420 J/(kg K) & Electronic box Scint. & 12.3 W \\
+Density: & 7900 kg/m$^3$ & Sun radiation & 4500 Wh m$^{-2}$ day$^{-1}$ \\
+Cherenkov medium: & Water & Convection coeficient & 10 W/(m$^2$ K) \\
+Model type: & Linear elastic isotropic & Mean enviroment temp. & 16 $^{\circ}$C \\
+Thermal conductivity: & 0.61 W/(m K) & Base water temperature & 10 $^{\circ}$C \\
+Specific heat: & 4200 J/(kg K) & & \\
+Density: & 1000 kg/m$^3$ & & \\ 
+\hline
+\end{tabular}
+\end{center}
+\caption{Instruments materials and basic data used into model of head analysis.}
+\label{instr_mat}
+\end{table}
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=1\columnwidth]{Figures/MuTe_Temp.eps}
+\caption{Temperature distribution of MuTe. The maximum heating point (60 $^{\circ}$C) is on the rear side of the scintillator panels due to the solar radiation, while the frontal side of them is cooled by wind convection. The WCD has its own heat-dissipation mechanism due to its water volume content.}
+\label{fig:temp_graph}
+\end{figure}
+
+The temperature distribution allows to know the critical points of heating in the detector structure and in this order, to make design readjustments to increase the heat dissipation using accessories such as a tent to isolate the instrument from solar radiation but with the possibility of air circulation to conserve heat transfer by convection. 
+
+\section{First measurements}
+
+First measurements by the MuTe hodoscope after calibration were carried out in the Halley laboratory located at Universidad Industrial de Santander (990 m a.s.l). The inter-panel distance was set to 134 cm obtaining an angular aperture of 82 $^{\circ}$ and a maximum acceptance value of 12.83 cm$^{2}$ sr. The data was recorded during 15 hours and the average rate by scintillator bar was roughly 836.3 event/h with a discrimination threshold of 8 photo-electrons. In order to reconstruct the particle trajectory and the flux traversing the hodoscope, we need to apply a four-bar activation condition, a pair xy in the frontal panel and a pair xy in the rear one. However, we must to correct the measured flux by a scale factor resulting of the minimum condition of coincidence (activation of one bar in the frontal panel and one in the rear one). This factor is 112.9. 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.48\columnwidth]{Figures/Hits_15h.png}
+\includegraphics[width=0.49\columnwidth]{Figures/Flux.png}
+\caption{Particle count measured by the hodoscope during 15 hours for a separation between planes of $D=134$ cm. For this experiment a flux of 10.7 $\times 10^{-3}$ cm$^{-2}$sr$^{-1}$s$^{-1}$ corresponding with vertical directions is measured. As it is expected, the flux decreases while the zenith angle increases. For a zenith angle of 41 $^{\circ}$ the flux is around 4.5 $\times 10^{-3}$ cm$^{-2}$sr$^{-1}$s$^{-1}$, half order of magnitude lower than the flux maximum.}
+\label{fig:hits_15}
+\end{figure}
+
+In Fig. \ref{fig:hits_15} show the number of hits recorded in coincidence by the hodoscope and the estimated flux. The maximum number of hits for perpendicular trajectories ($\theta_x=\theta_y=0^{\circ}$) respect to the hodoscope plane is 67. The number of events decrease with the inclination due to the hodoscope acceptance and the shape of the muon flux depending on the zenith angle ($\cos^2 \theta$). The estimated flux reaches up a maximum of 10.7 $\times 10^{-3}$ cm$^{-2}$sr$^{-1}$s$^{-1}$ which is comparable with the flux obtained by \textit{Lesperre} \cite{Lesparre2012} of 9 $\times 10^{-3}$ cm$^{-2}$sr$^{-1}$s$^{-1}$. The variance in the flux histogram can be reduced by increasing the acquisition time.
+
+
+
+The installation of the whole MuTe was performed at Universidad Industrial de Santander campus for assessing the detector behavior mimicking on-field conditions. The MuTe was set to 90$^{\circ}$ zenith (0$^{\circ}$ of elevation) as it is shown in Fig. \ref{fig:WCDHod}. The WCD and the hodoscope act as individual detectors but synchronized by timestamps. The flux in-coincidence between the hodoscope and the WCD is to orders of magnitude lower than all the events recorded by the WCD, representing only 2$\%$ as is shown in the deposited energy histogram in Fig. \ref{fig:WCDHod_rate}. This flux reduction mainly occurs due to factors: the muon flux is almost 2 orders of magnitude weaker at quasi-horizontal angles than the maximum flux at zenith 0, furthermore, the angular acceptance of the WCD is roughly 2$\pi$ while the acceptance of the hodoscope is only a fraction of that, constrained by the coincidence between both sensitive panels.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.7\columnwidth]{Figures/Acceptance.eps}
+\caption{MuTe setup for the first on-field measurements. The detector is pointing towards the horizon with an elevation angle of 0$^{\circ}$. The aperture of the hodoscope $\theta_H$ is 50$^{\circ}$ for a separation distance between panels of 250 cm. The aperture of the whole detector (WCD + hodoscope) $\theta_C$ is roughly 32$^{\circ}$.}
+\label{fig:WCDHod}
+\end{figure}
+
+The deposited energy histogram of the WCD-hodoscope data is composed by three sources: muons, electron/positrons and multiple particle events. The muonic component represents roughly the 33.6$\%$ of the events (180 MeV $< E_{loss} <$ 400 MeV), the electromagnetic 36$\%$ ($E_{loss} <$ 180 MeV), and the multiple particle 30.4$\%$ ($E_{loss} >$ 400 MeV) of the histogram. 
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.7\columnwidth]{Figures/WCDHod.eps}
+\caption{WCD deposited energy histogram for the omnidirectional events detected by the WCD (blue) and for the events in-coincidence between the WCD and the hodoscope (red). The dashed line represents the deposited energy of the vertical muons (VEM) which is estimated to be 240 MeV taking into account a muon losses about 2 MeV/cm in water. The first hump corresponds to energy deposited by electrons, positrons and gammas while above 400 MeV events correspond to multiple particles.}
+\label{fig:WCDHod_rate}
+\end{figure}
+
+These results show how the noise background (electromagnetic and multiple particle) is comparable to the signal, even greater taking into account that soft muons haven't been extracted from the muonic component. On the other side, multiple particle background, which is made by several particles temporally correlated e.g. inclined cosmic showers impacting the detector \cite{Bonechi2019}, become more significant comparing it with the magnitude of the electromagnetic and muonic humps.
+
+For large zenith trajectories muons begin to be more dominant than the electromagnetic component since it is largely absorbed by the atmosphere \cite{collaboration2014}. As a result, the flux for electron/positrons and single muons is almost the same.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\columnwidth]{Figures/HodWCDRate.eps}
+\caption{Event rate detected by the frontal (blue), rear (green) and the WCD (red) in-coincidence. The WCD rate is 50$\%$ lower than the detected by the panels due to it is not able to measure particles coming from trajectories at high inclination angles respect to the hodoscope plane. The dashed line indicates the expected WCD rate taking into account the ratio between the angular apertures $\theta_H$ and $\theta_C$.}
+\label{fig:RateWCDH}
+\end{figure}
+
+The aperture angle of the hodoscope $\theta_H$ at an inter-panel distance of 2.5 m is around 50$^{\circ}$, and the aperture of the whole detector (WCD + hodoscope) $\theta_C$ is roughly 32$^{\circ}$. That means, some of the tracks, for very inclined angles with respect to the hodoscope plane, recorded by the hodoscope can not be detected by the WCD. The WCD detects the 62 $\%$ of the hodoscope events. In Fig. \ref{fig:RateWCDH} we show the coincidence rate detected by the planes composing the hodoscope and the WCD during 14 hours. The mean rate for the panels is around 3.2 events/s and for the WCD 1.5 events/s which representing the $50\%$. The WCD flux is lower than expected due to the detection efficiency.
+
+
+\section{Discussion and conclusions}
+\label{conclusions}
+
+Muons are charged particles that can penetrate several kilometers of Earth's crust and their absorption rate depends on the material density they are crossing. Nowadays, muography can solve inner characteristics of structures with a resolution up to tens of meters. However, its practical use requires a good knowledge of the dependencies between spatial and angular resolution, acquisition time, target size and distance between the target and the detector. To extend the performance capabilities of muography it is necessary to address all these aspects at a design level taking into account results from simulations and experimental verification.
+
+In this paper we have presented the design and simulation of a muon telescope prepared for making density difference measurements in volcanoes located in the central mountain range of Colombia using muography. Our design includes an hodoscope formed by a pair of detection matrices made of plastic scintillators for the determination of the trajectories of muons crossing the volcanic structure. The hodoscope reaches up an angular resolution of 32 mrad for a inter-panel distance of 250 cm. Furthermore, our design also incorporates particle identification techniques in order to filter background sources in muography. A water Cherenkov detector allows to reduce noise signals coming from the soft-component of EAS (electrons and positrons), and multiple particle events by means of energy loss estimation. The WCD also measures fluctuations in the cosmic ray background at the observation place. Additionally, a Time-of-Flight system measures the direction and momentum of incident charged particles allowing to remove back-coming and low momentum scattered muons.
+
+A big challenge for the MuTe is to carry out {\it in situ} measurements of the atmospheric muon flux attenuation after crossing volcanic edifices at locations with complicated topography characteristics and adverse tropical environmental conditions (humidity, temperature variations, and wind currents). To ensure a good performance of the instrument we have considered a series of mechanical simulations taken into account the detector structural features for operating in long periods of time. 
+
+Therefore, determining and modelling volcano inner structures is crucial to evaluate their potential risk. This might be achieved through a powerful technique such as muography, which measures the muon flux attenuation by rock volumes of different densities allowing the imaging of volcanic conduits inside the volcanic edifice. It constitutes an engaging way to infer density distributions inside geological structures, which is critical for studying magma dynamics associated to possible eruptive scenarios. 
+
+\acknowledgments
+
+This research was carried out as part of the Muon Telescope project on {\it Grupo de Investigaci\'on en Relatividad y Gravitaci\'on} (GIRG) under financial support of  Departamento Administrativo de Ciencia, Tecnolog\'ia e Innovaci\'on of Colombia (ColCiencias) under contracts FP44842-051-2015 and FP44842-661-2015. DSP would like to thank GIRG, Grupo Halley and Vicerrector\'{\i}a Investigaci\'on y Extensi\'on Universidad Industrial de Santander for the hospitality during my post-doctoral fellowship.
+
+The research group is grateful to have the experience and advice of the Servicio Geologico Colombiano - SGC who have participated and worked together in the phase of determining the best sampling sites taking into account the design and transportability conditions of our detector.
+
+
+\bibliographystyle{unsrt}
+\bibliography{MuTe_bib.bib}
+
+\end{document}
